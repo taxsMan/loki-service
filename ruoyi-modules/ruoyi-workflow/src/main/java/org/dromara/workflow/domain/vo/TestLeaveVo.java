@@ -56,6 +56,12 @@ public class TestLeaveVo implements Serializable {
     private Integer leaveDays;
 
     /**
+     * 处理人ID
+     */
+    @ExcelProperty(value = "处理人ID")
+    private String ids;
+
+    /**
      * 备注
      */
     @ExcelProperty(value = "请假原因")

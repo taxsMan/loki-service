@@ -46,3 +46,7 @@ nbdist/
 !*/build/*.xml
 
 .flattened-pom.xml
+/.editorconfig
+.run
+ 
+.gitee

@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
 import org.dromara.common.mybatis.core.mapper.BaseMapperPlus;
 import org.dromara.workflow.domain.vo.TaskVo;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -16,6 +17,7 @@ import org.dromara.workflow.domain.vo.TaskVo;
  * @author may
  * @date 2024-03-02
  */
+@Repository
 @InterceptorIgnore(tenantLine = "true")
 public interface ActTaskMapper extends BaseMapperPlus<TaskVo, TaskVo> {
     /**

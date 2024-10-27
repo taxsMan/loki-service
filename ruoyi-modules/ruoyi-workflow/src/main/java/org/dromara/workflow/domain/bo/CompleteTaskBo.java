@@ -2,6 +2,7 @@ package org.dromara.workflow.domain.bo;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.checkerframework.checker.units.qual.K;
 import org.dromara.common.core.validate.AddGroup;
 import org.dromara.workflow.domain.vo.WfCopy;
 
@@ -54,12 +55,29 @@ public class CompleteTaskBo implements Serializable {
      */
     private Map<String, Object> variables;
 
+    private Map<String, Object> taskVariables;
+
     public Map<String, Object> getVariables() {
         if (variables == null) {
             return new HashMap<>(16);
         }
         variables.entrySet().removeIf(entry -> Objects.isNull(entry.getValue()));
         return variables;
+    }
+
+    public Map<String, Object> getTaskVariables() {
+        if (taskVariables == null) {
+            return new HashMap<>(16);
+        }
+        taskVariables.entrySet().removeIf(entry -> Objects.isNull(entry.getValue()));
+        return taskVariables;
+    }
+
+    public Object getTaskVariables(String Key) {
+        if (variables.containsKey(Key))
+            return variables.get(Key);
+        else return taskVariables.getOrDefault(Key, null);
+
     }
 
 }

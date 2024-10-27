@@ -19,6 +19,7 @@ import org.dromara.workflow.domain.TestLeave;
 import org.dromara.workflow.domain.bo.TestLeaveBo;
 import org.dromara.workflow.domain.vo.TestLeaveVo;
 import org.dromara.workflow.mapper.TestLeaveMapper;
+import org.dromara.workflow.mapper.WfModelKey;
 import org.dromara.workflow.service.ITestLeaveService;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@WfModelKey(key = "leave")
 public class TestLeaveServiceImpl implements ITestLeaveService {
 
     private final TestLeaveMapper baseMapper;

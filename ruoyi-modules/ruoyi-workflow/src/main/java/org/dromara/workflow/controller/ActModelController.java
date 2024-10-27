@@ -1,5 +1,6 @@
 package org.dromara.workflow.controller;
 
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -15,16 +16,22 @@ import org.dromara.common.mybatis.core.page.TableDataInfo;
 import org.dromara.common.web.core.BaseController;
 import org.dromara.workflow.domain.bo.ModelBo;
 import org.dromara.workflow.domain.vo.ModelVo;
+import org.dromara.workflow.flowable.config.WorkFlowKeysConfig;
+import org.dromara.workflow.mapper.WfModelKey;
 import org.dromara.workflow.service.IActModelService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.Model;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 模型管理 控制层
@@ -41,6 +48,8 @@ public class ActModelController extends BaseController {
     private RepositoryService repositoryService;
     private final IActModelService actModelService;
 
+    @Resource
+    private ApplicationContext applicationContext;
 
     /**
      * 分页查询模型
@@ -144,5 +153,18 @@ public class ActModelController extends BaseController {
     @PostMapping("/copyModel")
     public R<Void> copyModel(@RequestBody ModelBo modelBo) {
         return toAjax(actModelService.copyModel(modelBo));
+    }
+
+
+
+    /**
+     * 获取可用的key
+     *
+     * @return
+     */
+    @GetMapping("/keys")
+    public R<List<Map<String,String>>> keys() {
+        WorkFlowKeysConfig workFlowKeysConfig =new WorkFlowKeysConfig();
+        return R.ok(workFlowKeysConfig.getKeys(applicationContext));
     }
 }

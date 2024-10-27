@@ -59,5 +59,10 @@ public class TestLeave extends BaseEntity {
      */
     private String status;
 
+    /**
+     * 处理人ID
+     */
+    private String ids;
+
 
 }

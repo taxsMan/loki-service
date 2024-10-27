@@ -219,7 +219,30 @@ public class ActTaskServiceImpl implements IActTaskService {
                     if (ModelUtils.isUserTask(t.getProcessDefinitionId(), t.getTaskDefinitionKey())) {
                         List<HistoricIdentityLink> links = historyService.getHistoricIdentityLinksForTask(t.getId());
                         if (CollUtil.isEmpty(links) && StringUtils.isBlank(t.getAssignee())) {
-                            throw new ServiceException("下一节点【" + t.getName() + "】没有办理人!");
+
+                            // 查询节点 是否有 field额外字段
+                            boolean hasField = ModelUtils.hasField(t.getTaskDefinitionKey(), t.getProcessDefinitionId(), "field");
+                            String getField = ModelUtils.getField(t.getTaskDefinitionKey(), t.getProcessDefinitionId(), "field");
+
+                            if (hasField && !getField.isEmpty()) {
+                                // 查询请求参数
+                                String taskValue = null;
+                                Object taskVariables = completeTaskBo.getTaskVariables("entity");
+                                if(taskVariables == null){
+                                    throw new ServiceException("缺少任务参数[" + getField + "]");
+                                }
+                                if (taskVariables instanceof Map<?, ?> && ((Map<?, ?>) taskVariables).containsKey(getField)) {
+                                    Object tempVal = ((Map<?, ?>) taskVariables).get(getField);
+                                    if (tempVal instanceof String && !((String) tempVal).isEmpty()) {
+                                        taskValue = (String) tempVal;
+                                        taskService.setAssignee(t.getId(), taskValue);
+                                    } else {
+                                        throw new ServiceException("缺少任务参数[" + getField + "]");
+                                    }
+                                }
+                            } else {
+                                throw new ServiceException("下一节点【" + t.getName() + "】没有办理人!");
+                            }
                         }
                     }
                 }

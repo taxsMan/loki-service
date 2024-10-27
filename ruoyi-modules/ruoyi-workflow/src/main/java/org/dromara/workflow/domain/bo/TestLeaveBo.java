@@ -72,6 +72,12 @@ public class TestLeaveBo extends BaseEntity {
     private String remark;
 
     /**
+     * 处理人ID
+     */
+    @NotNull(message = "处理人不能为空", groups = {AddGroup.class, EditGroup.class})
+    private String ids;
+
+    /**
      * 状态
      */
     private String status;

@@ -272,6 +272,50 @@ public class ModelUtils {
     }
 
     /**
+     * 判断是不是有外的字段
+     * @param taskDefinitionKey   流程定义id
+     * @param processDefinitionId 流程定义id
+     * @param name 字段名称
+     */
+    public static boolean hasField(String taskDefinitionKey, String processDefinitionId, String name) {
+        return getExtensionAttribute(taskDefinitionKey, processDefinitionId).containsKey(name);
+    }
+
+    /**
+     * 获取字段名称
+     * @param taskDefinitionKey   流程定义id
+     * @param processDefinitionId 流程定义id
+     * @param name 字段名称
+     */
+    public static String getField(String taskDefinitionKey, String processDefinitionId, String name) {
+        return getExtensionAttribute(taskDefinitionKey, processDefinitionId).get(name);
+    }
+
+    /**
+     * 额外定义的参数
+     *
+     * @param taskDefinitionKey   流程定义id
+     * @param processDefinitionId 流程定义id
+     */
+    public static Map<String, String> getExtensionAttribute(String taskDefinitionKey, String processDefinitionId) {
+        BpmnModel bpmnModel = PROCESS_ENGINE.getRepositoryService().getBpmnModel(processDefinitionId);
+        FlowNode flowElement = (FlowNode) bpmnModel.getFlowElement(taskDefinitionKey);
+
+        if (flowElement instanceof UserTask userTask) {
+            //额外参数查询
+            Map<String, List<ExtensionAttribute>> attributes = userTask.getAttributes();
+            Map<String, String> fetch = new HashMap<>();
+            attributes.forEach((String k, List<ExtensionAttribute> item) -> {
+                for (ExtensionAttribute it : item) {
+                    fetch.put(it.getName(), it.getValue());
+                }
+            });
+            return fetch;
+        }
+        return new HashMap<>();
+    }
+
+    /**
      * 获取申请人节点
      *
      * @param processDefinitionId 流程定义id
